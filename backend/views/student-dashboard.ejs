@@ -64,7 +64,27 @@
     .pending { color: orange; }
     .progress { color: yellow; }
     .resolved { color: lightgreen; }
+    .timeline {
+  border-left: 3px solid #007bff;
+  padding-left: 20px;
+  margin-top: 10px;
+}
 
+.timeline-item {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -11px;
+  top: 5px;
+  width: 12px;
+  height: 12px;
+  background: #007bff;
+  border-radius: 50%;
+}
   </style>
 </head>
 
@@ -92,28 +112,49 @@
       <p>No complaints submitted yet.</p>
     <% } %>
 
-    <% complaints.forEach(c => { %>
-      <div class="complaint-card">
-        <p><strong>Department:</strong> <%= c.department %></p>
-        <p><strong>Message:</strong> <%= c.message %></p>
+    <% complaints.forEach(complaint => { %>
 
+  <div class="complaint-box" style="border:1px solid #ccc; padding:15px; margin-bottom:20px; border-radius:8px;">
 
+    <p><strong>Status:</strong> <%= complaint.status %></p>
+    <p><strong>Message:</strong> <%= complaint.message %></p>
 
-        <% if (c.status === "Pending") { %>
-          <p class="status pending">Status: Pending</p>
-        <% } else if (c.status === "In Progress") { %>
-          <p class="status progress">Status: In Progress</p>
-        <% } else { %>
-            <p><strong>Remarks:</strong> <%= c.remarks %></p>
-            <p>
-              <a href="/uploads/<%= c.proofDocument %>" 
-                target="_blank" style="color:lightgreen;">
-                View Proof Document
-              </a>
-            </p>
-          <% } %>
-      </div>
-    <% }) %>
+    <% if (complaint.remarks) { %>
+      <p><strong>Remarks:</strong> <%= complaint.remarks %></p>
+    <% } %>
+
+    <% if (complaint.proofDocument) { %>
+      <p>
+        <strong>Proof:</strong>
+        <a href="/uploads/<%= complaint.proofDocument %>" target="_blank">
+          View Document
+        </a>
+      </p>
+    <% } %>
+
+    <!-- ✅ TIMELINE -->
+    <h4 style="margin-top:15px;">Complaint Timeline</h4>
+
+    <div class="timeline">
+      <% complaint.timeline.forEach(item => { %>
+        <div class="timeline-item">
+          <p><strong><%= item.status %></strong></p>
+          <p><%= item.message %></p>
+          <small><%= new Date(item.date).toLocaleString() %></small>
+        </div>
+      <% }) %>
+    </div>
+
+    <!-- Escalate Button -->
+    <% if (complaint.status === "Resolved") { %>
+      <form action="/student/escalate/<%= complaint._id %>" method="POST">
+        <button type="submit">Not Satisfied</button>
+      </form>
+    <% } %>
+
+  </div>
+
+<% }) %>
 
   </div>
 </body>

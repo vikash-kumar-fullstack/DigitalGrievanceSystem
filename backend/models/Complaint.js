@@ -26,9 +26,34 @@ const complaintSchema = new mongoose.Schema(
   proofDocument: {
     type: String,
     default: null
-  }
   },
+  escalatedTo: {
+  type: String,
+  default: null
+},
+lastUpdatedAt: {
+  type: Date,
+  default: Date.now
+},
+
+createdAt: {
+  type: Date,
+  default: Date.now
+},
+timeline: [
+  {
+    status: String,
+    message: String,
+    date: {
+      type: Date,
+      default: Date.now
+    }
+  }
+]
+  },
+  
   { timestamps: true }
+  
 );
 
 module.exports = mongoose.model("Complaint", complaintSchema);
