@@ -28,16 +28,30 @@ if (userExists) {
 
     const otp = Math.floor(100000 + Math.random() * 900000);
 
-    tempUsers.set(email, {
-      name,
-      password,
-      otp,
-      createdAt: Date.now()
-    });
+tempUsers.set(email, {
+  name,
+  password,
+  otp,
+  createdAt: Date.now()
+});
 
-    await sendOtp(email, otp);
+try {
+  await sendOtp(email, otp);
+} catch (mailErr) {
+  console.log("MAIL ERROR:", mailErr);
 
-    res.render("verify-otp", { email, message: "OTP sent successfully" });
+  tempUsers.delete(email); 
+
+  return res.render("register", {
+    error: "Invalid institute email or email does not exist",
+    oldData: { name, email }
+  });
+}
+
+res.render("verify-otp", {
+  email,
+  message: "OTP sent successfully"
+});
 
   } catch (err) {
     console.log("OTP ERROR:", err);
