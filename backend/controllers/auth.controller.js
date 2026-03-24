@@ -37,7 +37,7 @@ if (userExists) {
 
     await sendOtp(email, otp);
 
-    res.render("verify-otp", { email });
+    res.render("verify-otp", { email, message: "OTP sent successfully" });
 
   } catch (err) {
     console.log("OTP ERROR:", err);
@@ -155,10 +155,15 @@ exports.resendOtp = async (req, res) => {
       });
     }
 
-    // 🔥 generate new OTP
+    if (Date.now() - tempUser.createdAt < 30000) {
+      return res.render("verify-otp", {
+        email,
+        error: "Please wait 30 seconds before requesting a new OTP"
+      });
+    }
+
     const otp = Math.floor(100000 + Math.random() * 900000);
 
-    // 🔥 update temp storage
     tempUsers.set(email, {
       ...tempUser,
       otp,
@@ -166,19 +171,18 @@ exports.resendOtp = async (req, res) => {
     });
 
     await sendOtp(email, otp);
-    if (Date.now() - tempUser.createdAt < 30000) {
-      return res.render("verify-otp", {
-        email,
-        error: "Please wait 30 seconds before retry"
-      });
-    }
-    res.render("verify-otp", {
+
+    return res.render("verify-otp", {
       email,
-      message: "OTP resent successfully"
+      message: "A new OTP has been sent to your email"
     });
 
   } catch (err) {
-    console.log(err);
-    res.send("Error resending OTP");
+    console.log("RESEND OTP ERROR:", err);
+
+    return res.render("verify-otp", {
+      email: req.body.email,
+      error: "Something went wrong. Please try again."
+    });
   }
 };
