@@ -23,7 +23,6 @@ exports.register = async (req, res) => {
       `^(bt|mt)(${allowedYears})(cs|ec|ee|me|ma|ce)(\\d{3})@nitmz\\.ac\\.in$`
     );
 
-    // 🔥 Single validation using match
     const match = email.match(emailRegex);
 
     if (!match) {
