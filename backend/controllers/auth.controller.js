@@ -8,49 +8,75 @@ exports.register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    const emailRegex = /^bt\d{2}cs\d{3}@nitmz\.ac\.in$/;
+    const currentYear = new Date().getFullYear() % 100;
 
-    if (!emailRegex.test(email)) {
-  return res.render("register", {
-    error: "Enter valid institute email",
-    oldData: { name, email } 
-  });
-}
+    const allowedYears = [
+      currentYear,
+      currentYear - 1,
+      currentYear - 2,
+      currentYear - 3
+    ]
+      .map(y => y.toString().padStart(2, "0"))
+      .join("|");
 
-const userExists = await User.findOne({ email });
-if (userExists) {
-  return res.render("register", {
-    error: "User already exists",
-    oldData: { name, email } 
-  });
-}
+    const emailRegex = new RegExp(
+      `^(bt|mt)(${allowedYears})(cs|ec|ee|me|ma|ce)(\\d{3})@nitmz\\.ac\\.in$`
+    );
+
+    // 🔥 Single validation using match
+    const match = email.match(emailRegex);
+
+    if (!match) {
+      return res.render("register", {
+        error: "Enter valid institute email",
+        oldData: { name, email }
+      });
+    }
+
+    const roll = parseInt(match[4]);
+
+    if (roll > 200) {
+      return res.render("register", {
+        error: "Invalid roll number",
+        oldData: { name, email }
+      });
+    }
+
+    const userExists = await User.findOne({ email });
+
+    if (userExists) {
+      return res.render("register", {
+        error: "User already exists",
+        oldData: { name, email }
+      });
+    }
 
     const otp = Math.floor(100000 + Math.random() * 900000);
 
-tempUsers.set(email, {
-  name,
-  password,
-  otp,
-  createdAt: Date.now()
-});
+    tempUsers.set(email, {
+      name,
+      password,
+      otp,
+      createdAt: Date.now()
+    });
 
-try {
-  await sendOtp(email, otp);
-} catch (mailErr) {
-  console.log("MAIL ERROR:", mailErr);
+    try {
+      await sendOtp(email, otp);
+    } catch (mailErr) {
+      console.log("MAIL ERROR:", mailErr);
 
-  tempUsers.delete(email); 
+      tempUsers.delete(email);
 
-  return res.render("register", {
-    error: "Invalid institute email or email does not exist",
-    oldData: { name, email }
-  });
-}
+      return res.render("register", {
+        error: "Invalid institute email or email does not exist",
+        oldData: { name, email }
+      });
+    }
 
-res.render("verify-otp", {
-  email,
-  message: "OTP sent successfully"
-});
+    return res.render("verify-otp", {
+      email,
+      message: "OTP sent successfully"
+    });
 
   } catch (err) {
     console.log("OTP ERROR:", err);
