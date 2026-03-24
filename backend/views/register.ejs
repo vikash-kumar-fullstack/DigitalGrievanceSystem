@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Register | Digital Grievance System</title>
-  <style>
+  <!-- <style>
     body {
       background: linear-gradient(135deg, #1d2671, #c33764);
       min-height: 100vh;
@@ -51,10 +51,11 @@
     button:hover {
       opacity: 0.9;
     }
-  </style>
+  </style> -->
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 
-<body>
+<body class="auth-body">
   <div class="box">
     <h2>Register</h2>
     <form method="POST" action="/api/auth/register">
@@ -65,7 +66,7 @@
   <!-- role is FIXED as student -->
   <input type="hidden" name="role" value="student" />
 
-  <button type="submit">Create Student Account</button>
+  <button class="auth-btn" type="submit">Register</button>
 </form>
 
   </div>

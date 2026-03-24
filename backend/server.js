@@ -1,4 +1,5 @@
 require("dotenv").config();
+require('dns').setDefaultResultOrder('ipv4first'); 
 require("./utils/cronJobs");
 const express = require("express");
 const mongoose = require("mongoose");
@@ -13,7 +14,7 @@ const multer = require("multer");
 const path = require("path");
 const sendNotification = require("./utils/sendNotification");
 const Notification = require("./models/Notification");
-
+const errorHandler = require("./middleware/errorHandler");
 
 const app = express();
 
@@ -30,7 +31,7 @@ app.set("view engine", "ejs");
 // ================= ROUTES =================
 app.use("/api/auth", authRoutes);
 app.use("/admin", adminRoutes);
-
+app.use(errorHandler);
 // ================= ROOT =================
 app.get("/", (req, res) => {
   res.redirect("/login"); // ✅ start from login
@@ -168,6 +169,7 @@ app.get(
         .limit(5);
 
       res.render("admin-dashboard", {
+        user: req.user,
         totalComplaints,
         pending,
         inProgress,
@@ -196,7 +198,7 @@ app.get(
     const notifications = await Notification.find({
     user: req.user.id
   }).sort({ createdAt: -1 });
-    res.render("department-dashboard", { notifications,complaints });
+    res.render("department-dashboard", {user: req.user, notifications,complaints });
   }
 );
 
@@ -345,10 +347,15 @@ app.post(
 );
 
 // ================= DB =================
-mongoose.connect(process.env.MONGO_URI)
-  .then(() => console.log("MongoDB Connected"))
-  .catch(err => console.log(err));
-
+mongoose.connect(process.env.MONGO_URI, {
+  serverSelectionTimeoutMS: 5000,
+  family: 4 // 🔥 THIS FIXES TIMEOUT
+})
+.then(() => console.log("MongoDB Connected"))
+.catch(err => {
+  console.log("Mongo Error:", err);
+  process.exit(1); // 🔥 stop server if DB fails
+});
 // ================= SERVER =================
 const http = require("http");
 const { Server } = require("socket.io");
@@ -360,7 +367,6 @@ const io = new Server(server);
 app.set("io", io); // 🔥 important
 
 io.on("connection", (socket) => {
-  console.log("User connected:", socket.id);
 
   // user joins their own room
   socket.on("join", (userId) => {
@@ -372,6 +378,8 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(5000, () => {
-  console.log("Server running");
+const PORT = process.env.PORT || 5000;
+
+server.listen(PORT, () => {
+  console.log("Server running on", PORT);
 });

@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Student Dashboard</title>
-  <style>
+  <!-- <style>
     body {
       margin: 0;
       font-family: Segoe UI, sans-serif;
@@ -85,12 +85,13 @@
   background: #007bff;
   border-radius: 50%;
 }
-  </style>
+  </style> -->
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 
-<body>
+<body class="student-body">
   <div class="container">
-    <h2>Submit Complaint</h2>
+    <h2 >Submit Complaint</h2>
 
     <form method="POST" action="/student/submit-complaint">
       <select name="department" required>
@@ -103,7 +104,7 @@
 
       <textarea name="message" placeholder="Describe your issue..." required></textarea>
 
-      <button type="submit">Submit Complaint</button>
+      <button style="padding: 10px;" type="submit">Submit Complaint</button>
     </form>
 
     <h2>Your Complaints</h2>

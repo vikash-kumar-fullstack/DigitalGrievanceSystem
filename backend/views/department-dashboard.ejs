@@ -2,7 +2,7 @@
 <html>
 <head>
   <title>Department Dashboard</title>
-  <style>
+  <!-- <style>
     body {
       margin: 0;
       font-family: Segoe UI, sans-serif;
@@ -52,10 +52,11 @@
       cursor: pointer;
       margin-left: 10px;
     }
-  </style>
+  </style> -->
+  <link rel="stylesheet" href="/css/style.css">
 </head>
 
-<body>
+<body class="department-body">
   <div class="container">
     <h2>Department Complaints</h2>
 
@@ -83,7 +84,7 @@
             <textarea name="remarks" placeholder="Enter remarks..."></textarea>
         </div>
 
-        <button type="submit">Update</button>
+        <button style="padding: 10px;" type="submit">Update</button>
         </form>
       </div>
     <% }) %>

@@ -1,0 +1,334 @@
+/* ================= RESET ================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ================= BODY ================= */
+body {
+  font-family: Segoe UI, sans-serif;
+  color: #fff;
+}
+
+/* ================= AUTH (LOGIN + REGISTER) ================= */
+.auth-body {
+  background: linear-gradient(135deg, #1d2671, #c33764);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.box {
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(12px);
+  padding: 35px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+input, select, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: none;
+  outline: none;
+}
+
+/* ================= BUTTON ================= */
+button {
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+/* AUTH BUTTON */
+.auth-btn {
+  width: 100%;
+  padding: 12px;
+  background: #00c6ff;
+  color: #000;
+}
+
+/* REGISTER BUTTON */
+.register-btn {
+  width: 100%;
+  padding: 12px;
+  background: #00ff99;
+  color: #000;
+}
+
+/* ================= LINK ================= */
+.link {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 0.9rem;
+}
+
+.link a {
+  color: #fff;
+  text-decoration: underline;
+}
+
+/* ================= ERROR ================= */
+.error-box {
+  background: #ff4d4d;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* ================= STUDENT DASHBOARD ================= */
+.student-body {
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
+
+.container {
+  max-width: 1000px;
+  margin: 50px auto;
+  background: rgba(255,255,255,0.08);
+  backdrop-filter: blur(15px);
+  padding: 40px;
+  border-radius: 18px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+}
+
+textarea {
+  height: 100px;
+  resize: none;
+}
+
+.primary-btn {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(45deg, #00c6ff, #0072ff);
+  margin-bottom: 30px;
+}
+
+/* ================= COMPLAINT ================= */
+.complaint-card {
+  background: rgba(255,255,255,0.12);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.status {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+.pending { color: orange; }
+.progress { color: yellow; }
+.resolved { color: lightgreen; }
+
+/* ================= TIMELINE ================= */
+.timeline {
+  border-left: 3px solid #007bff;
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.timeline-item {
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.timeline-item::before {
+  content: "";
+  position: absolute;
+  left: -11px;
+  top: 5px;
+  width: 12px;
+  height: 12px;
+  background: #007bff;
+  border-radius: 50%;
+}
+
+/* ================= DEPARTMENT DASHBOARD ================= */
+.department-body {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}
+
+.card {
+  background: rgba(255,255,255,0.12);
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.small-btn {
+  padding: 8px 14px;
+  background: #00c6ff;
+  margin-left: 10px;
+}
+
+/* ================= ADMIN DASHBOARD ================= */
+.admin-body {
+  background: linear-gradient(135deg, #0f2027, #203a43);
+}
+
+.section {
+  background: #203a43;
+  padding: 25px;
+  border-radius: 12px;
+  margin-bottom: 30px;
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.stat-box {
+  background: linear-gradient(135deg, #2c5364, #203a43);
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.stat-box:hover {
+  transform: translateY(-5px);
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.chart-box {
+  background: white;
+  color: black;
+  border-radius: 12px;
+  padding: 15px;
+  height: 320px;
+}
+
+.chart-box h3 {
+  text-align: center;
+}
+
+canvas {
+  width: 100% !important;
+  height: 250px !important;
+}
+
+.complaint-box {
+  background: #2c5364;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+}
+
+/* ================= ERROR PAGE ================= */
+.error-body {
+  background: #0f2027;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* ================= RESPONSIVE ================= */
+
+/* Tablet */
+@media (max-width: 900px) {
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .container {
+    margin: 20px;
+    padding: 20px;
+  }
+
+  .stats {
+    grid-template-columns: 1fr;
+  }
+
+  .box {
+    padding: 20px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
+  input, button {
+    font-size: 14px;
+  }
+}
+
+/* Landscape */
+@media (orientation: landscape) and (max-width: 900px) {
+  .chart-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+/* ================= NAVBAR ================= */
+.navbar {
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(10px);
+  padding: 15px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.nav-container {
+  max-width: 1200px;
+  margin: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+nav a {
+  margin-left: 15px;
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+}
+
+nav a:hover {
+  color: #00c6ff;
+}
+
+/* ================= FOOTER ================= */
+.footer {
+  text-align: center;
+  padding: 15px;
+  background: rgba(0,0,0,0.5);
+  margin-top: 30px;
+}

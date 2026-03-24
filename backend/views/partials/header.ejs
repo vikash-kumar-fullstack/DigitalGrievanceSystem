@@ -1,49 +1,34 @@
-<style>
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 30px;
-    margin-bottom: 30px;
+<header class="navbar">
+  <div class="nav-container">
 
-    background: rgba(0, 0, 0, 0.25);
-    border-radius: 12px;
-  }
+    <div class="logo">
+      Digital Grievance
+    </div>
 
-  .logo {
-    font-size: 1.6rem;
-    font-weight: bold;
-    color: #fff;
-  }
+    <nav>
+      <% if (user) { %>
 
-  .nav-links {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-  }
+        <% if (user.role === "student") { %>
+          <a href="/student/dashboard">Dashboard</a>
+        <% } %>
 
-  .nav-links a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: 500;
-    padding: 6px 10px;
-    border-radius: 6px;
-    transition: background 0.3s;
-  }
+        <% if (user.role === "department") { %>
+          <a href="/department/dashboard">Dashboard</a>
+        <% } %>
 
-  .nav-links a:hover {
-    background: rgba(255, 255, 255, 0.2);
-  }
-</style>
+        <% if (user.role === "admin") { %>
+          <a href="/admin/dashboard">Dashboard</a>
+        <% } %>
 
-<header>
-  <nav class="navbar">
-    <h2 class="logo">Digital Grievance System</h2>
-    <ul class="nav-links">
-      <li><a href="/">Home</a></li>
-      <li><a href="#">Login</a></li>
-      <li><a href="#">Register</a></li>
-    </ul>
-  </nav>
+        <a href="/logout">Logout</a>
+
+      <% } else { %>
+
+        <a href="/login">Login</a>
+        <a href="/register">Register</a>
+
+      <% } %>
+    </nav>
+
+  </div>
 </header>
-
