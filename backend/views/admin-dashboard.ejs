@@ -8,7 +8,7 @@
 
   <style>
     body {
-      background: #0f2027;
+      background: linear-gradient(135deg, #0f2027, #203a43);
       color: #fff;
       font-family: Segoe UI, sans-serif;
       padding: 40px;
@@ -21,7 +21,11 @@
   max-width: 1200px; /* 🔥 increased */
   margin: auto;
 }
-
+.chart-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
     h2 {
       text-align: center;
       margin-bottom: 20px;
@@ -59,6 +63,10 @@
   font-size: 18px;
   font-weight: bold;
 }
+.stat-box:hover {
+  transform: translateY(-5px);
+  transition: 0.3s;
+}
 .chart-container {
   background: #ffffff;
   border-radius: 12px;
@@ -67,12 +75,6 @@
   height: 300px; /* 🔥 CONTROL HEIGHT */
 }
 
-    canvas {
-      background: #fff;
-      border-radius: 10px;
-      padding: 10px;
-      margin-top: 20px;
-    }
     h3 {
   margin-top: 40px;
   margin-bottom: 15px;
@@ -83,6 +85,9 @@
   border-radius: 10px;
   margin-bottom: 15px;
   background: #2c5364;
+}
+.section {
+  margin-top: 40px;
 }
   </style>
 </head>
@@ -119,16 +124,18 @@
       <div class="stat-box">Resolved<br><%= resolved %></div>
     </div>
 
-    <!-- Chart 1: Status Distribution -->
-    <h3>Status Distribution</h3>
-    <div class="chart-container">
-  <canvas id="statusChart"></canvas>
-</div>
+    <div class="chart-grid">
 
-    <!-- Chart 2: Department Distribution -->
+  <div class="chart-container">
+    <h3>Status Distribution</h3>
+    <canvas id="statusChart"></canvas>
+  </div>
+
+  <div class="chart-container">
     <h3>Complaints by Department</h3>
-    <div class="chart-container">
-  <canvas id="deptChart"></canvas>
+    <canvas id="deptChart"></canvas>
+  </div>
+
 </div>
 
     <!-- Recent Complaints -->
@@ -165,31 +172,55 @@
   const deptCounts = data.complaintsByDept.map(d => d.count);
 
   // 📊 STATUS CHART
-  new Chart(document.getElementById("statusChart"), {
-    type: "pie",
-    data: {
-      labels: ["Pending", "In Progress", "Resolved"],
-      datasets: [{
-        label: "Complaints",
-        data: [pending, inProgress, resolved],
-        backgroundColor: ["#ff6384", "#36a2eb", "#4caf50"]
-      }]
-    }
-  });
-
-  // 📊 DEPARTMENT CHART
-  new Chart(document.getElementById("statusChart"), {
-  type: "pie",
+new Chart(document.getElementById("statusChart"), {
+  type: "doughnut", // 🔥 better than pie (professional look)
   data: {
     labels: ["Pending", "In Progress", "Resolved"],
     datasets: [{
       data: [pending, inProgress, resolved],
-      backgroundColor: ["#ff6384", "#36a2eb", "#4caf50"]
+      backgroundColor: ["#ff6384", "#36a2eb", "#4caf50"],
+      borderWidth: 1
     }]
   },
   options: {
     responsive: true,
-    maintainAspectRatio: false
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: "bottom"
+      }
+    }
+  }
+});
+
+// 📊 DEPARTMENT CHART
+new Chart(document.getElementById("deptChart"), {
+  type: "bar",
+  data: {
+    labels: deptLabels,
+    datasets: [{
+      label: "Complaints",
+      data: deptCounts,
+      backgroundColor: "#00c6ff",
+      borderRadius: 6
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: false
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          stepSize: 1
+        }
+      }
+    }
   }
 });
 </script>
