@@ -34,7 +34,7 @@ app.use("/admin", adminRoutes);
 app.use(errorHandler);
 // ================= ROOT =================
 app.get("/", (req, res) => {
-  res.redirect("/login"); // ✅ start from login
+  res.redirect("/login");
 });
 
 // ================= AUTH PAGES =================
@@ -43,7 +43,10 @@ app.get("/login", (req, res) => {
 });
 
 app.get("/register", (req, res) => {
-  res.render("register");
+  res.render("register", {
+    error: null,
+    oldData: null // 
+  });
 });
 
 app.get("/logout", (req, res) => {

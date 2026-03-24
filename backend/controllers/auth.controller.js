@@ -1,41 +1,47 @@
 const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-
+const sendOtp = require("../utils/sendOtp");
+// 🔥 at top of authController.js
+const tempUsers = new Map();
 // ================= REGISTER =================
-exports.register = async (req, res, next) => {
+exports.register = async (req, res) => {
   try {
     const { name, email, password } = req.body;
 
-    const userExists = await User.findOne({ email });
+    const emailRegex = /^bt\d{2}cs\d{3}@nitmz\.ac\.in$/;
 
-    if (userExists) {
-      return res.render("login", {
-        error: "User already exists. Please login."
-      });
-    }
+    if (!emailRegex.test(email)) {
+  return res.render("register", {
+    error: "Enter valid institute email",
+    oldData: { name, email } // 🔥 ADD THIS
+  });
+}
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+const userExists = await User.findOne({ email });
+if (userExists) {
+  return res.render("register", {
+    error: "User already exists",
+    oldData: { name, email } // 🔥 ADD THIS
+  });
+}
 
-    const user = await User.create({
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    tempUsers.set(email, {
       name,
-      email,
-      password: hashedPassword,
-      role: "student"
+      password,
+      otp,
+      createdAt: Date.now()
     });
 
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: "1d" }
-    );
+    await sendOtp(email, otp);
 
-    res.cookie("token", token, { httpOnly: true });
-
-    res.redirect("/student/dashboard");
+    res.render("verify-otp", { email });
 
   } catch (err) {
-    next(err); // 🔥 global error handler
+    console.log("OTP ERROR:", err);
+    res.send("Error sending OTP");
   }
 };
 
@@ -87,5 +93,51 @@ exports.login = async (req, res, next) => {
 
   } catch (err) {
     next(err);
+  }
+};
+
+exports.verifyOtp = async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    const tempUser = tempUsers.get(email);
+
+    if (!tempUser) {
+      return res.send("Session expired");
+    }
+
+    // 🔥 OTP EXPIRY CHECK
+    if (Date.now() - tempUser.createdAt > 5 * 60 * 1000) {
+      tempUsers.delete(email);
+      return res.render("verify-otp", {
+        email,
+        error: "OTP expired. Please register again."
+      });
+    }
+
+    if (tempUser.otp != otp) {
+      return res.render("verify-otp", {
+        email,
+        error: "Invalid OTP"
+      });
+    }
+
+    const hashedPassword = await bcrypt.hash(tempUser.password, 10);
+
+    const user = await User.create({
+      name: tempUser.name,
+      email,
+      password: hashedPassword,
+      role: "student",
+      isVerified: true
+    });
+
+    tempUsers.delete(email);
+
+    res.redirect("/login");
+
+  } catch (err) {
+    console.log(err);
+    res.send("OTP verification failed");
   }
 };

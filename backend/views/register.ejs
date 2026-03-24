@@ -7,9 +7,17 @@
 <body class="auth-body">
   <div class="box">
     <h2>Register</h2>
+    <% if (typeof error !== "undefined" && error) { %>
+    <div class="error-box">
+      <%= error %>
+    </div>
+  <% } %>
     <form method="POST" action="/api/auth/register">
-  <input type="text" name="name" placeholder="Full Name" required />
-  <input type="email" name="email" placeholder="Email" required />
+<input type="text" name="name" placeholder="Name"
+value="<%= typeof oldData !== 'undefined' && oldData ? oldData.name : '' %>" required />
+
+<input type="email" name="email" placeholder="Email"
+value="<%= typeof oldData !== 'undefined' && oldData ? oldData.email : '' %>" required />
   <input type="password" name="password" placeholder="Password" required />
 
   <!-- role is FIXED as student -->
