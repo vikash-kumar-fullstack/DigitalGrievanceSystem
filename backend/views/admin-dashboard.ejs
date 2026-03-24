@@ -15,12 +15,12 @@
     }
 
     .card {
-      background: #203a43;
-      padding: 30px;
-      border-radius: 12px;
-      max-width: 900px;
-      margin: auto;
-    }
+  background: #203a43;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 1200px; /* 🔥 increased */
+  margin: auto;
+}
 
     h2 {
       text-align: center;
@@ -45,18 +45,27 @@
     }
 
     .stats {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: 30px;
-    }
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
 
-    .stat-box {
-      background: #2c5364;
-      padding: 15px;
-      border-radius: 10px;
-      text-align: center;
-      width: 22%;
-    }
+.stat-box {
+  background: linear-gradient(135deg, #2c5364, #203a43);
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+}
+.chart-container {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 30px;
+  height: 300px; /* 🔥 CONTROL HEIGHT */
+}
 
     canvas {
       background: #fff;
@@ -64,6 +73,17 @@
       padding: 10px;
       margin-top: 20px;
     }
+    h3 {
+  margin-top: 40px;
+  margin-bottom: 15px;
+}
+.complaint-box {
+  border: 1px solid #ccc;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  background: #2c5364;
+}
   </style>
 </head>
 
@@ -101,17 +121,21 @@
 
     <!-- Chart 1: Status Distribution -->
     <h3>Status Distribution</h3>
-    <canvas id="statusChart"></canvas>
+    <div class="chart-container">
+  <canvas id="statusChart"></canvas>
+</div>
 
     <!-- Chart 2: Department Distribution -->
     <h3>Complaints by Department</h3>
-    <canvas id="deptChart"></canvas>
+    <div class="chart-container">
+  <canvas id="deptChart"></canvas>
+</div>
 
     <!-- Recent Complaints -->
     <h3>Recent Complaints</h3>
 
     <% recentComplaints.forEach(c => { %>
-      <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+      <div class="complaint-box" style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
         <p><strong>Status:</strong> <%= c.status %></p>
         <p><%= c.message %></p>
         <small><%= new Date(c.createdAt).toLocaleString() %></small>
@@ -154,17 +178,20 @@
   });
 
   // 📊 DEPARTMENT CHART
-  new Chart(document.getElementById("deptChart"), {
-    type: "bar",
-    data: {
-      labels: deptLabels,
-      datasets: [{
-        label: "Complaints",
-        data: deptCounts,
-        backgroundColor: "#00c6ff"
-      }]
-    }
-  });
+  new Chart(document.getElementById("statusChart"), {
+  type: "pie",
+  data: {
+    labels: ["Pending", "In Progress", "Resolved"],
+    datasets: [{
+      data: [pending, inProgress, resolved],
+      backgroundColor: ["#ff6384", "#36a2eb", "#4caf50"]
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false
+  }
+});
 </script>
 
 </body>
