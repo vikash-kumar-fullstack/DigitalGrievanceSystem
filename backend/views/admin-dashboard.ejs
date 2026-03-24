@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin Dashboard</title>
+
+  <!-- Chart.js CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    body {
+      background: #0f2027;
+      color: #fff;
+      font-family: Segoe UI, sans-serif;
+      padding: 40px;
+    }
+
+    .card {
+      background: #203a43;
+      padding: 30px;
+      border-radius: 12px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      border: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #00c6ff;
+      border: none;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .stats {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 30px;
+    }
+
+    .stat-box {
+      background: #2c5364;
+      padding: 15px;
+      border-radius: 10px;
+      text-align: center;
+      width: 22%;
+    }
+
+    canvas {
+      background: #fff;
+      border-radius: 10px;
+      padding: 10px;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+
+    <!-- Create Department -->
+    <h2>Create Department</h2>
+
+    <form method="POST" action="/admin/create-department">
+      <input type="text" name="name" placeholder="Department Name" required />
+      <input type="email" name="email" placeholder="Department Email" required />
+      <input type="password" name="password" placeholder="Temporary Password" required />
+
+      <select name="level" required>
+        <option value="">Select Level</option>
+        <option value="1">Level 1 (Lower)</option>
+        <option value="2">Level 2 (Higher)</option>
+      </select>
+
+      <input type="text" name="parentDepartment" placeholder="Higher Department (optional)" />
+
+      <button type="submit">Create Department</button>
+    </form>
+
+    <!-- Analytics -->
+    <h2>Dashboard Analytics</h2>
+
+    <div class="stats">
+      <div class="stat-box">Total<br><%= totalComplaints %></div>
+      <div class="stat-box">Pending<br><%= pending %></div>
+      <div class="stat-box">In Progress<br><%= inProgress %></div>
+      <div class="stat-box">Resolved<br><%= resolved %></div>
+    </div>
+
+    <!-- Chart 1: Status Distribution -->
+    <h3>Status Distribution</h3>
+    <canvas id="statusChart"></canvas>
+
+    <!-- Chart 2: Department Distribution -->
+    <h3>Complaints by Department</h3>
+    <canvas id="deptChart"></canvas>
+
+    <!-- Recent Complaints -->
+    <h3>Recent Complaints</h3>
+
+    <% recentComplaints.forEach(c => { %>
+      <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+        <p><strong>Status:</strong> <%= c.status %></p>
+        <p><%= c.message %></p>
+        <small><%= new Date(c.createdAt).toLocaleString() %></small>
+      </div>
+    <% }) %>
+
+  </div>
+  <script id="chart-data" type="application/json">
+  <%- JSON.stringify({
+    pending,
+    inProgress,
+    resolved,
+    complaintsByDept
+  }) %>
+</script>
+  <!-- Charts Script -->
+  <script>
+  // ✅ Read data safely from DOM
+  const rawData = document.getElementById("chart-data").textContent;
+  const data = JSON.parse(rawData);
+
+  const pending = data.pending;
+  const inProgress = data.inProgress;
+  const resolved = data.resolved;
+
+  const deptLabels = data.complaintsByDept.map(d => d._id);
+  const deptCounts = data.complaintsByDept.map(d => d.count);
+
+  // 📊 STATUS CHART
+  new Chart(document.getElementById("statusChart"), {
+    type: "pie",
+    data: {
+      labels: ["Pending", "In Progress", "Resolved"],
+      datasets: [{
+        label: "Complaints",
+        data: [pending, inProgress, resolved],
+        backgroundColor: ["#ff6384", "#36a2eb", "#4caf50"]
+      }]
+    }
+  });
+
+  // 📊 DEPARTMENT CHART
+  new Chart(document.getElementById("deptChart"), {
+    type: "bar",
+    data: {
+      labels: deptLabels,
+      datasets: [{
+        label: "Complaints",
+        data: deptCounts,
+        backgroundColor: "#00c6ff"
+      }]
+    }
+  });
+</script>
+
+</body>
+</html>
