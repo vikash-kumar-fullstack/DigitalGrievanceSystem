@@ -63,7 +63,7 @@ app.get(
     const notifications = await Notification.find({
     user: req.user.id
   }).sort({ createdAt: -1 });
-    res.render("student-dashboard", {notifications, complaints });
+    res.render("student-dashboard", {user: req.user,notifications, complaints });
   }
 
 
@@ -96,9 +96,10 @@ app.post(
       });
 
       if (deptUser) {
+        const io = req.app.get("io");
         await sendNotification(
           deptUser._id,
-          "New complaint assigned to your department"
+          "New complaint assigned to your department",io
         );
 }
       res.redirect("/student/dashboard");
@@ -263,9 +264,10 @@ app.post(
       });
 
       // ✅ Notification
+      const io = req.app.get("io");
       await sendNotification(
         complaint.student,
-        `Your complaint status updated to ${req.body.status}`
+        `Your complaint status updated to ${req.body.status}`,io
       );
 
       res.redirect("/department/dashboard");
@@ -327,9 +329,10 @@ app.post(
       await complaint.save();
 
       // ✅ NOW send notification (correct place)
+      const io = req.app.get("io");
       await sendNotification(
         nextDept._id,
-        "A complaint has been escalated to your department"
+        "A complaint has been escalated to your department",io
       );
 
       res.redirect("/student/dashboard");
@@ -347,6 +350,28 @@ mongoose.connect(process.env.MONGO_URI)
   .catch(err => console.log(err));
 
 // ================= SERVER =================
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+const http = require("http");
+const { Server } = require("socket.io");
+
+const server = http.createServer(app);
+
+const io = new Server(server);
+
+app.set("io", io); // 🔥 important
+
+io.on("connection", (socket) => {
+  console.log("User connected:", socket.id);
+
+  // user joins their own room
+  socket.on("join", (userId) => {
+    socket.join(userId);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
+});
+
+server.listen(5000, () => {
+  console.log("Server running");
 });

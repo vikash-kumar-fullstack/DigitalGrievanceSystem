@@ -1,11 +1,22 @@
 const Notification = require("../models/Notification");
 
-const sendNotification = async (userId, message) => {
+
+const sendNotification = async (userId, message, io) => {
   try {
-    await Notification.create({
+    // save in DB
+    const newNotification = await Notification.create({
       user: userId,
       message
     });
+
+    // 🔥 real-time emit
+    if (io) {
+      io.to(userId.toString()).emit("newNotification", {
+        message,
+        createdAt: newNotification.createdAt
+      });
+    }
+
   } catch (err) {
     console.log("Notification error:", err);
   }

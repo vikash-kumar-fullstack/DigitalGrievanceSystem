@@ -88,6 +88,22 @@
       </div>
     <% }) %>
   </div>
+  <script src="/socket.io/socket.io.js"></script>
+
+<script>
+  const socket = io();
+
+  // join personal room
+  socket.emit("join", "<%= user._id %>");
+
+  socket.on("newNotification", (data) => {
+    // 🔥 SIMPLE POPUP
+    alert("🔔 " + data.message);
+
+    // optional: reload page
+    // location.reload();
+  });
+</script>
 </body>
 <script>
 function toggleResolved(select, id) {
