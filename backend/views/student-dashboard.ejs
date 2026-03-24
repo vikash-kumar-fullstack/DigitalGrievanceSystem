@@ -4,8 +4,9 @@
   <title>Student Dashboard</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
-<%- include("partials/header", { user: user }) %>
 <body class="student-body">
+  <%- include("partials/header", { user: user }) %>
+   <div class="main-content"> 
   <div class="container">
     <h2 >Submit Complaint</h2>
 
@@ -90,6 +91,7 @@
     // location.reload();
   });
 </script>
-</body>
+</div>
 <%- include("partials/footer") %>
+</body>
 </html>

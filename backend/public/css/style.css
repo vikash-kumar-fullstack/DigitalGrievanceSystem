@@ -10,6 +10,20 @@ body {
   font-family: Segoe UI, sans-serif;
   color: #fff;
 }
+/* 🔥 PAGE LAYOUT FIX */
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+/* main content expands */
+.main-content {
+  flex: 1;
+}
 
 /* ================= AUTH (LOGIN + REGISTER) ================= */
 .auth-body {

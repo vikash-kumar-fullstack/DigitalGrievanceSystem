@@ -4,8 +4,9 @@
   <title>Department Dashboard</title>
   <link rel="stylesheet" href="/css/style.css">
 </head>
-<%- include("partials/header", { user: user }) %>
 <body class="department-body">
+  <%- include("partials/header", { user: user }) %>
+   <div class="main-content"> 
   <div class="container">
     <h2>Department Complaints</h2>
 
@@ -54,8 +55,9 @@
     // location.reload();
   });
 </script>
-</body>
+</div>
 <%- include("partials/footer") %>
+</body>
 <script>
 function toggleResolved(select, id) {
   const box = document.getElementById("resolved-box-" + id);
