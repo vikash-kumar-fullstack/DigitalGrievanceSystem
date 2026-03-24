@@ -2,93 +2,9 @@
 <html>
 <head>
   <title>Student Dashboard</title>
-  <!-- <style>
-    body {
-      margin: 0;
-      font-family: Segoe UI, sans-serif;
-      background: linear-gradient(135deg, #1e3c72, #2a5298);
-      color: #fff;
-    }
-
-    .container {
-      max-width: 900px;
-      margin: 50px auto;
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(15px);
-      padding: 40px;
-      border-radius: 18px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.4);
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 25px;
-    }
-
-    select, textarea {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
-      margin-bottom: 15px;
-    }
-
-    textarea {
-      height: 100px;
-      resize: none;
-    }
-
-    button {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: none;
-      background: linear-gradient(45deg, #00c6ff, #0072ff);
-      font-weight: bold;
-      cursor: pointer;
-      margin-bottom: 30px;
-    }
-
-    .complaint-card {
-      background: rgba(255,255,255,0.12);
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
-
-    .status {
-      font-weight: bold;
-      margin-top: 10px;
-    }
-
-    .pending { color: orange; }
-    .progress { color: yellow; }
-    .resolved { color: lightgreen; }
-    .timeline {
-  border-left: 3px solid #007bff;
-  padding-left: 20px;
-  margin-top: 10px;
-}
-
-.timeline-item {
-  margin-bottom: 15px;
-  position: relative;
-}
-
-.timeline-item::before {
-  content: "";
-  position: absolute;
-  left: -11px;
-  top: 5px;
-  width: 12px;
-  height: 12px;
-  background: #007bff;
-  border-radius: 50%;
-}
-  </style> -->
   <link rel="stylesheet" href="/css/style.css">
 </head>
-
+<%- include("partials/header", { user: user }) %>
 <body class="student-body">
   <div class="container">
     <h2 >Submit Complaint</h2>
@@ -175,4 +91,5 @@
   });
 </script>
 </body>
+<%- include("partials/footer") %>
 </html>

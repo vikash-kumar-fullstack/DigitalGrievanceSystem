@@ -2,60 +2,9 @@
 <html>
 <head>
   <title>Department Dashboard</title>
-  <!-- <style>
-    body {
-      margin: 0;
-      font-family: Segoe UI, sans-serif;
-      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-      color: #fff;
-    }
-
-    .container {
-      max-width: 1000px;
-      margin: 60px auto;
-      background: rgba(255,255,255,0.08);
-      backdrop-filter: blur(12px);
-      padding: 40px;
-      border-radius: 18px;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.4);
-    }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .card {
-      background: rgba(255,255,255,0.12);
-      padding: 20px;
-      border-radius: 12px;
-      margin-bottom: 20px;
-    }
-
-    .status {
-      font-weight: bold;
-      margin-top: 10px;
-    }
-
-    select {
-      padding: 8px;
-      border-radius: 8px;
-      border: none;
-    }
-
-    button {
-      padding: 8px 14px;
-      border-radius: 8px;
-      border: none;
-      background: #00c6ff;
-      font-weight: bold;
-      cursor: pointer;
-      margin-left: 10px;
-    }
-  </style> -->
   <link rel="stylesheet" href="/css/style.css">
 </head>
-
+<%- include("partials/header", { user: user }) %>
 <body class="department-body">
   <div class="container">
     <h2>Department Complaints</h2>
@@ -106,6 +55,7 @@
   });
 </script>
 </body>
+<%- include("partials/footer") %>
 <script>
 function toggleResolved(select, id) {
   const box = document.getElementById("resolved-box-" + id);

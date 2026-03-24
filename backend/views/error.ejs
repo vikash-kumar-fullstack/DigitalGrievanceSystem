@@ -2,30 +2,9 @@
 <html>
 <head>
   <title>Error</title>
-  <!-- <style>
-    body {
-      background: #0f2027;
-      color: white;
-      font-family: sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-    }
-
-    .box {
-      background: #203a43;
-      padding: 30px;
-      border-radius: 10px;
-      text-align: center;
-    }
-
-    a {
-      color: #00c6ff;
-    }
-  </style> -->
   <link rel="stylesheet" href="/css/style.css">
 </head>
+<%- include("partials/header", { user: user }) %>
 <body class="error-body">
   <div class="box">
     <h2>⚠️ Error</h2>
@@ -33,4 +12,5 @@
     <a href="/">Go Back</a>
   </div>
 </body>
+<%- include("partials/footer") %>
 </html>
