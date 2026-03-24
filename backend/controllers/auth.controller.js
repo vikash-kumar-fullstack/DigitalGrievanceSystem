@@ -141,3 +141,44 @@ exports.verifyOtp = async (req, res) => {
     res.send("OTP verification failed");
   }
 };
+
+exports.resendOtp = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    const tempUser = tempUsers.get(email);
+
+    if (!tempUser) {
+      return res.render("register", {
+        error: "Session expired. Please register again.",
+        oldData: null
+      });
+    }
+
+    // 🔥 generate new OTP
+    const otp = Math.floor(100000 + Math.random() * 900000);
+
+    // 🔥 update temp storage
+    tempUsers.set(email, {
+      ...tempUser,
+      otp,
+      createdAt: Date.now()
+    });
+
+    await sendOtp(email, otp);
+    if (Date.now() - tempUser.createdAt < 30000) {
+      return res.render("verify-otp", {
+        email,
+        error: "Please wait 30 seconds before retry"
+      });
+    }
+    res.render("verify-otp", {
+      email,
+      message: "OTP resent successfully"
+    });
+
+  } catch (err) {
+    console.log(err);
+    res.send("Error resending OTP");
+  }
+};
