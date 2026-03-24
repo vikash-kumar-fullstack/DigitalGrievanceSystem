@@ -10,7 +10,6 @@ body {
   font-family: Segoe UI, sans-serif;
   color: #fff;
 }
-/* 🔥 PAGE LAYOUT FIX */
 html, body {
   height: 100%;
 }
@@ -253,7 +252,6 @@ canvas {
   margin-bottom: 15px;
 }
 
-/* ================= ERROR PAGE ================= */
 .error-body {
   background: #0f2027;
   display: flex;
@@ -262,7 +260,6 @@ canvas {
   height: 100vh;
 }
 
-/* ================= RESPONSIVE ================= */
 
 /* Tablet */
 @media (max-width: 900px) {

@@ -86,7 +86,6 @@ app.post(
         department,
         message,
 
-        // ✅ Timeline initialized
         timeline: [
           {
             status: "Submitted",
@@ -136,7 +135,6 @@ app.get(
         status: "Resolved"
       });
 
-      // 📊 complaints per department
       const complaintsByDept = await Complaint.aggregate([
   {
     $group: {
@@ -166,7 +164,6 @@ app.get(
       // optional: populate department name
       const deptData = await User.find({ role: "department" });
 
-      // 🆕 recent complaints
       const recentComplaints = await Complaint.find()
         .sort({ createdAt: -1 })
         .limit(5);
@@ -268,7 +265,6 @@ app.post(
         $push: { timeline: timelineEntry }
       });
 
-      // ✅ Notification
       const io = req.app.get("io");
       await sendNotification(
         complaint.student,
@@ -315,25 +311,21 @@ app.post(
         return res.send("No higher authority available");
       }
 
-      // ✅ escalation history
       complaint.escalationHistory.push({
         department: currentDept._id
       });
 
-      // ✅ timeline
       complaint.timeline.push({
         status: "Escalated",
         message: "Complaint escalated to higher authority"
       });
 
-      // ✅ update complaint
       complaint.department = nextDept.department;
       complaint.status = "Pending";
       complaint.lastUpdatedAt = new Date();
 
       await complaint.save();
 
-      // ✅ NOW send notification (correct place)
       const io = req.app.get("io");
       await sendNotification(
         nextDept._id,
@@ -352,12 +344,12 @@ app.post(
 // ================= DB =================
 mongoose.connect(process.env.MONGO_URI, {
   serverSelectionTimeoutMS: 5000,
-  family: 4 // 🔥 THIS FIXES TIMEOUT
+  family: 4 
 })
 .then(() => console.log("MongoDB Connected"))
 .catch(err => {
   console.log("Mongo Error:", err);
-  process.exit(1); // 🔥 stop server if DB fails
+  process.exit(1);
 });
 // ================= SERVER =================
 const http = require("http");
@@ -367,7 +359,7 @@ const server = http.createServer(app);
 
 const io = new Server(server);
 
-app.set("io", io); // 🔥 important
+app.set("io", io); 
 
 io.on("connection", (socket) => {
 

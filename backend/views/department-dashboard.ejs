@@ -48,7 +48,6 @@
   socket.emit("join", "<%= user._id %>");
 
   socket.on("newNotification", (data) => {
-    // 🔥 SIMPLE POPUP
     alert("🔔 " + data.message);
 
     // optional: reload page

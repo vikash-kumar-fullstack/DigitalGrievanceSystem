@@ -50,7 +50,6 @@
       </p>
     <% } %>
 
-    <!-- ✅ TIMELINE -->
     <h4 style="margin-top:15px;">Complaint Timeline</h4>
 
     <div class="timeline">
@@ -84,7 +83,6 @@
   socket.emit("join", "<%= user._id %>");
 
   socket.on("newNotification", (data) => {
-    // 🔥 SIMPLE POPUP
     alert("🔔 " + data.message);
 
     // optional: reload page

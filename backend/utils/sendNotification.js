@@ -9,7 +9,6 @@ const sendNotification = async (userId, message, io) => {
       message
     });
 
-    // 🔥 real-time emit
     if (io) {
       io.to(userId.toString()).emit("newNotification", {
         message,

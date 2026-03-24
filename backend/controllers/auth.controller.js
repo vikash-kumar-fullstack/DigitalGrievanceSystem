@@ -2,7 +2,6 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const sendOtp = require("../utils/sendOtp");
-// 🔥 at top of authController.js
 const tempUsers = new Map();
 // ================= REGISTER =================
 exports.register = async (req, res) => {
@@ -14,7 +13,7 @@ exports.register = async (req, res) => {
     if (!emailRegex.test(email)) {
   return res.render("register", {
     error: "Enter valid institute email",
-    oldData: { name, email } // 🔥 ADD THIS
+    oldData: { name, email } 
   });
 }
 
@@ -22,7 +21,7 @@ const userExists = await User.findOne({ email });
 if (userExists) {
   return res.render("register", {
     error: "User already exists",
-    oldData: { name, email } // 🔥 ADD THIS
+    oldData: { name, email } 
   });
 }
 
@@ -92,7 +91,6 @@ exports.login = async (req, res, next) => {
 
     res.cookie("token", token, { httpOnly: true });
 
-    // 🔥 Role-based redirect
     if (user.role === "student") {
       return res.redirect("/student/dashboard");
     }
@@ -120,7 +118,6 @@ exports.verifyOtp = async (req, res) => {
       return res.send("Session expired");
     }
 
-    // 🔥 OTP EXPIRY CHECK
     if (Date.now() - tempUser.createdAt > 5 * 60 * 1000) {
       tempUsers.delete(email);
       return res.render("verify-otp", {
