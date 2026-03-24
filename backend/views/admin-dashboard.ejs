@@ -3,38 +3,40 @@
 <head>
   <title>Admin Dashboard</title>
 
-  <!-- Chart.js CDN -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
     body {
+      margin: 0;
       background: linear-gradient(135deg, #0f2027, #203a43);
-      color: #fff;
-      font-family: Segoe UI, sans-serif;
-      padding: 40px;
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
     }
 
-    .card {
-  background: #203a43;
-  padding: 30px;
-  border-radius: 12px;
-  max-width: 1200px; /* 🔥 increased */
-  margin: auto;
-}
-.chart-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-}
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 30px 20px;
+    }
+
     h2 {
       text-align: center;
       margin-bottom: 20px;
     }
 
-    input, select {
+    /* 🔥 SECTION CARD */
+    .section {
+      background: #203a43;
+      padding: 25px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+    }
+
+    /* 🔥 FORM */
+    form input, form select {
       width: 100%;
       padding: 12px;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
       border-radius: 8px;
       border: none;
     }
@@ -44,58 +46,79 @@
       padding: 12px;
       background: #00c6ff;
       border: none;
+      border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
     }
 
+    /* 🔥 STATS */
     .stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  margin-bottom: 30px;
-}
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+    }
 
-.stat-box {
-  background: linear-gradient(135deg, #2c5364, #203a43);
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-}
-.stat-box:hover {
-  transform: translateY(-5px);
-  transition: 0.3s;
-}
-.chart-container {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 30px;
-  height: 300px; /* 🔥 CONTROL HEIGHT */
-}
+    .stat-box {
+      background: linear-gradient(135deg, #2c5364, #203a43);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 18px;
+      transition: 0.3s;
+    }
 
-    h3 {
-  margin-top: 40px;
-  margin-bottom: 15px;
-}
-.complaint-box {
-  border: 1px solid #ccc;
-  padding: 15px;
-  border-radius: 10px;
-  margin-bottom: 15px;
-  background: #2c5364;
-}
-.section {
-  margin-top: 40px;
-}
+    .stat-box:hover {
+      transform: translateY(-5px);
+    }
+
+    /* 🔥 CHART GRID */
+    .chart-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .chart-box {
+      background: white;
+      border-radius: 12px;
+      padding: 15px;
+      height: 320px;
+      color: black;
+    }
+
+    .chart-box h3 {
+      margin: 0 0 10px;
+      text-align: center;
+    }
+
+    canvas {
+      width: 100% !important;
+      height: 250px !important;
+    }
+
+    /* 🔥 COMPLAINTS */
+    .complaint-box {
+      background: #2c5364;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+
+    /* 🔥 RESPONSIVE */
+    @media (max-width: 768px) {
+      .chart-grid {
+        grid-template-columns: 1fr;
+      }
+    }
   </style>
 </head>
 
 <body>
-  <div class="card">
 
-    <!-- Create Department -->
+<div class="container">
+
+  <!-- 🔥 CREATE DEPARTMENT -->
+  <div class="section">
     <h2>Create Department</h2>
 
     <form method="POST" action="/admin/create-department">
@@ -105,16 +128,18 @@
 
       <select name="level" required>
         <option value="">Select Level</option>
-        <option value="1">Level 1 (Lower)</option>
-        <option value="2">Level 2 (Higher)</option>
+        <option value="1">Level 1</option>
+        <option value="2">Level 2</option>
       </select>
 
       <input type="text" name="parentDepartment" placeholder="Higher Department (optional)" />
 
       <button type="submit">Create Department</button>
     </form>
+  </div>
 
-    <!-- Analytics -->
+  <!-- 🔥 ANALYTICS -->
+  <div class="section">
     <h2>Dashboard Analytics</h2>
 
     <div class="stats">
@@ -123,34 +148,42 @@
       <div class="stat-box">In Progress<br><%= inProgress %></div>
       <div class="stat-box">Resolved<br><%= resolved %></div>
     </div>
+  </div>
 
+  <!-- 🔥 CHARTS -->
+  <div class="section">
     <div class="chart-grid">
 
-  <div class="chart-container">
-    <h3>Status Distribution</h3>
-    <canvas id="statusChart"></canvas>
+      <div class="chart-box">
+        <h3>Status Distribution</h3>
+        <canvas id="statusChart"></canvas>
+      </div>
+
+      <div class="chart-box">
+        <h3>Department Complaints</h3>
+        <canvas id="deptChart"></canvas>
+      </div>
+
+    </div>
   </div>
 
-  <div class="chart-container">
-    <h3>Complaints by Department</h3>
-    <canvas id="deptChart"></canvas>
-  </div>
-
-</div>
-
-    <!-- Recent Complaints -->
-    <h3>Recent Complaints</h3>
+  <!-- 🔥 RECENT -->
+  <div class="section">
+    <h2>Recent Complaints</h2>
 
     <% recentComplaints.forEach(c => { %>
-      <div class="complaint-box" style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+      <div class="complaint-box">
         <p><strong>Status:</strong> <%= c.status %></p>
         <p><%= c.message %></p>
         <small><%= new Date(c.createdAt).toLocaleString() %></small>
       </div>
     <% }) %>
-
   </div>
-  <script id="chart-data" type="application/json">
+
+</div>
+
+<!-- 🔥 DATA -->
+<script id="chart-data" type="application/json">
   <%- JSON.stringify({
     pending,
     inProgress,
@@ -158,48 +191,40 @@
     complaintsByDept
   }) %>
 </script>
-  <!-- Charts Script -->
-  <script>
-  // ✅ Read data safely from DOM
-  const rawData = document.getElementById("chart-data").textContent;
-  const data = JSON.parse(rawData);
 
-  const pending = data.pending;
-  const inProgress = data.inProgress;
-  const resolved = data.resolved;
+<!-- 🔥 CHART SCRIPT -->
+<script>
+const rawData = document.getElementById("chart-data").textContent;
+const data = JSON.parse(rawData);
 
-  const deptLabels = data.complaintsByDept.map(d => d._id);
-  const deptCounts = data.complaintsByDept.map(d => d.count);
+const deptLabels = data.complaintsByDept.map(d => d._id);
+const deptCounts = data.complaintsByDept.map(d => d.count);
 
-  // 📊 STATUS CHART
+// STATUS
 new Chart(document.getElementById("statusChart"), {
-  type: "doughnut", // 🔥 better than pie (professional look)
+  type: "doughnut",
   data: {
     labels: ["Pending", "In Progress", "Resolved"],
     datasets: [{
-      data: [pending, inProgress, resolved],
-      backgroundColor: ["#ff6384", "#36a2eb", "#4caf50"],
-      borderWidth: 1
+      data: [data.pending, data.inProgress, data.resolved],
+      backgroundColor: ["#ff6384", "#36a2eb", "#4caf50"]
     }]
   },
   options: {
     responsive: true,
     maintainAspectRatio: false,
     plugins: {
-      legend: {
-        position: "bottom"
-      }
+      legend: { position: "bottom" }
     }
   }
 });
 
-// 📊 DEPARTMENT CHART
+// DEPARTMENT
 new Chart(document.getElementById("deptChart"), {
   type: "bar",
   data: {
     labels: deptLabels,
     datasets: [{
-      label: "Complaints",
       data: deptCounts,
       backgroundColor: "#00c6ff",
       borderRadius: 6
@@ -208,19 +233,7 @@ new Chart(document.getElementById("deptChart"), {
   options: {
     responsive: true,
     maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: false
-      }
-    },
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          stepSize: 1
-        }
-      }
-    }
+    plugins: { legend: { display: false } }
   }
 });
 </script>
